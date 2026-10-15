@@ -1,4 +1,5 @@
-/* СЭС «Чистый Дом» — валидация формы и маска телефона (vanilla JS, без зависимостей) */
+/* СЭС «Чистый Дом» — маска телефона, валидация формы и эмуляция отправки.
+   Vanilla JS, без зависимостей. */
 (function () {
   'use strict';
 
@@ -8,6 +9,7 @@
   var nameInput = form.elements.name;
   var phoneInput = form.elements.phone;
   var status = document.getElementById('form-status');
+  var submitBtn = form.querySelector('button[type="submit"]');
   var yearEl = document.getElementById('year');
 
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
@@ -23,8 +25,7 @@
   function formatPhone(raw) {
     var d = digitsOf(raw);
 
-    // Нормализуем первую цифру: 8 → 7
-    if (d.charAt(0) === '8') d = '7' + d.slice(1);
+    if (d.charAt(0) === '8') d = '7' + d.slice(1);   // 8 → +7
     if (d.charAt(0) !== '7') d = '7' + d;
     d = d.slice(0, DIGITS);
 
@@ -64,7 +65,9 @@
   });
 
   phoneInput.addEventListener('paste', function (e) {
-    var text = (e.clipboardData || window.clipboardData).getData('text');
+    var data = e.clipboardData || window.clipboardData;
+    if (!data) return;
+    var text = data.getData('text');
     if (!text) return;
     e.preventDefault();
     phoneInput.value = formatPhone(text);
@@ -87,11 +90,13 @@
   }
 
   function validateName() {
-    var value = nameInput.value.trim();
     var errorEl = document.getElementById('name-error');
+    var value = nameInput.value.trim();
     if (!value) return setError(nameInput, errorEl, 'Укажите имя.');
     if (value.length < 2) return setError(nameInput, errorEl, 'Имя должно содержать минимум 2 символа.');
-    if (!/^[A-Za-zА-Яа-яЁё\s-]+$/.test(value)) return setError(nameInput, errorEl, 'Имя может содержать только буквы, пробел и дефис.');
+    if (!/^[A-Za-zА-Яа-яЁё\s-]+$/.test(value)) {
+      return setError(nameInput, errorEl, 'Имя может содержать только буквы, пробел и дефис.');
+    }
     return setError(nameInput, errorEl, '');
   }
 
@@ -112,6 +117,12 @@
 
   /* ---------- Отправка (эмуляция) ---------- */
 
+  function setStatus(state, message) {
+    if (state) status.dataset.state = state;
+    else status.removeAttribute('data-state');
+    status.textContent = message || '';
+  }
+
   form.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -119,29 +130,29 @@
     var okPhone = validatePhone();
 
     if (!okName || !okPhone) {
-      status.dataset.state = 'error';
-      status.textContent = 'Проверьте выделенные поля и попробуйте снова.';
+      setStatus('error', 'Проверьте выделенные поля и попробуйте снова.');
       var firstInvalid = form.querySelector('[aria-invalid="true"]');
       if (firstInvalid) firstInvalid.focus();
       return;
     }
 
-    var submitBtn = form.querySelector('button[type="submit"]');
+    var label = submitBtn.textContent;
     submitBtn.disabled = true;
     submitBtn.textContent = 'Отправляем…';
-    status.removeAttribute('data-state');
-    status.textContent = '';
+    form.setAttribute('aria-busy', 'true');
+    setStatus(null, '');
 
     // Эмуляция сетевого запроса — реальная отправка не выполняется
     window.setTimeout(function () {
       var name = nameInput.value.trim().replace(/[<>&]/g, '');
-      status.dataset.state = 'success';
-      status.textContent = name + ', спасибо! Заявка принята. Перезвоним в течение 15 минут.';
+      setStatus('success', name + ', спасибо! Заявка принята. Перезвоним в течение 15 минут.');
 
       form.reset();
       phoneInput.value = '';
+      form.removeAttribute('aria-busy');
       submitBtn.disabled = false;
-      submitBtn.textContent = 'Оставить заявку';
+      submitBtn.textContent = label;
+      status.focus && status.focus();
     }, 700);
   });
 })();
