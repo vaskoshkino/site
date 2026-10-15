@@ -134,15 +134,10 @@ a:hover { color: var(--brand-900); }
 
 .site-header {
   position: sticky; top: 0; z-index: 50;
-  color: #fff;
-  background-image:
-    linear-gradient(180deg, rgba(6, 42, 68, .80) 0%, rgba(6, 42, 68, .42) 46%, rgba(6, 42, 68, .76) 100%),
-    url("../img/header-nature.svg");
-  background-size: cover, cover;
-  background-position: center, center 38%;
-  background-repeat: no-repeat, no-repeat;
-  border-bottom: 1px solid rgba(255, 255, 255, .18);
-  box-shadow: 0 10px 26px rgba(6, 42, 68, .28);
+  color: var(--brand-900);
+  background: #fff;
+  border-bottom: 1px solid rgba(8, 58, 94, .10);
+  box-shadow: 0 6px 22px rgba(8, 58, 94, .08);
 }
 
 .header-inner {
@@ -153,19 +148,18 @@ a:hover { color: var(--brand-900); }
 
 .logo {
   display: inline-flex; align-items: center; gap: .55rem;
-  color: #fff;
+  color: var(--brand-700);
   font-weight: 700; font-size: 1.125rem;
   letter-spacing: -.01em;
   text-decoration: none;
   margin-right: auto;
-  text-shadow: 0 1px 6px rgba(6, 42, 68, .55);
 }
 .logo__mark {
   transition: transform .25s var(--ease);
-  filter: drop-shadow(0 2px 6px rgba(6, 42, 68, .45));
+  filter: drop-shadow(0 2px 6px rgba(8, 58, 94, .22));
 }
 .logo:hover .logo__mark { transform: rotate(-6deg) scale(1.06); }
-.logo__text { color: #fff; }
+.logo__text { color: var(--brand-900); }
 
 .nav { order: 3; width: 100%; }
 .nav__list {
@@ -178,10 +172,9 @@ a:hover { color: var(--brand-900); }
   position: relative;
   display: inline-block;
   padding: .35rem 0;
-  color: rgba(255, 255, 255, .86);
+  color: rgba(8, 58, 94, .82);
   font-size: .9375rem;
   text-decoration: none;
-  text-shadow: 0 1px 6px rgba(6, 42, 68, .55);
   transition: color .2s var(--ease);
 }
 .nav a::after {
@@ -193,23 +186,21 @@ a:hover { color: var(--brand-900); }
   transform: scaleX(0); transform-origin: left;
   transition: transform .25s var(--ease);
 }
-.nav a:hover { color: #fff; }
+.nav a:hover { color: var(--brand-700); }
 .nav a:hover::after { transform: scaleX(1); }
 
 .header-phone {
   display: inline-flex; align-items: center; gap: .5rem;
-  color: #fff;
+  color: var(--brand-900);
   text-decoration: none;
-  text-shadow: 0 1px 6px rgba(6, 42, 68, .55);
 }
 .header-phone__icon {
   flex: none;
-  fill: none; stroke: #fff; stroke-width: 1.7;
+  fill: none; stroke: var(--brand-700); stroke-width: 1.7;
   stroke-linecap: round; stroke-linejoin: round;
-  filter: drop-shadow(0 1px 4px rgba(6, 42, 68, .5));
 }
 .header-phone__text { display: grid; line-height: 1.25; }
-.header-phone__label { font-size: .75rem; color: rgba(255, 255, 255, .82); }
+.header-phone__label { font-size: .75rem; color: var(--text-muted); }
 .header-phone__value { font-weight: 700; white-space: nowrap; }
 
 /* ---------- Кнопки ---------- */
@@ -285,10 +276,19 @@ a:hover { color: var(--brand-900); }
 .hero {
   position: relative;
   padding-block: clamp(2.5rem, 6vw, 5rem);
-  background:
-    radial-gradient(760px 420px at 88% 12%, color-mix(in srgb, var(--brand-500) 26%, transparent), transparent 68%),
-    radial-gradient(620px 380px at 4% 88%, color-mix(in srgb, var(--brand-600) 16%, transparent), transparent 70%),
-    linear-gradient(180deg, var(--brand-050), var(--surface));
+  background-image:
+    linear-gradient(180deg, rgba(255, 255, 255, .82) 0%, rgba(255, 255, 255, .62) 44%, rgba(243, 250, 254, .90) 100%),
+    url("../img/header-nature.svg");
+  background-size: cover, cover;
+  background-position: center, center 42%;
+  background-repeat: no-repeat, no-repeat;
+}
+@media (prefers-color-scheme: dark) {
+  .hero {
+    background-image:
+      linear-gradient(180deg, rgba(10, 22, 32, .84) 0%, rgba(10, 22, 32, .66) 44%, rgba(10, 22, 32, .92) 100%),
+      url("../img/header-nature.svg");
+  }
 }
 
 .hero__inner {
